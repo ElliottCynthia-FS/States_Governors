@@ -1,55 +1,71 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
+const State = require("../models/State");
+const { getState, getStateById, createState, updateState, deleteState } = require("../controllers/stateController");
 
-router.get("/", (req, res, next) => {
-    res
-    .status(200)
-    .json({
-        status: "success",
-        message: `${req.method} - State request made`,
-    });
-});
+router.get("/", getState);
 
-router.post("/", (req, res, next) => {
-    res
-    .status(200)
-    .json({
-        status: "success",
-        message: `${req.method} - State addition made`,
-    });
-});
+router.post("/", createState);
 
-router.get("/:id", (req, res, next) => {
-    const { id } = req.params;
-    res
-    .status(200)
-    .json({
-        id,
-        status: "success",
-        message: `${req.method} - State by Id request made`,
-    });
-});
+//* This was the original code for createState before Controller was created
+// router.post("/", (req, res, next) => {
+//     const newState = new State({
+//         _id: new mongoose.Types.ObjectId(),
+//         name: req.body.name,
+//         age: req.body.age,
+//         established: {
+//             year: req.body.established.year,
+//             description: req.body.established.description,
+//         },
+//         bird: req.body.bird,
+//         flower: req.body.flower,
+//         counties: req.body.counties,
+//         governor: req.body.governor,
+//     });
+//     newState.save()
+//         .then(result => {
+//             console.log(result);
+//             res.status(200).json({
+//                 message: "State created successfully",
+//                 state: {
+//                     name: result.name,
+//                     age: result.age,
+//                     established: {
+//                         year: result.established.year,
+//                         description: result.established.description,
+//                     },
+//                     bird: result.bird,
+//                     flower: result.flower,
+//                     counties: result.counties,
+//                     governor: result.governor,
+//                     metadata: {
+//                         method: req.method,
+//                         host: req.hostname,
+//                     }
+//                 }
+//             })
+//             .catch(err => {
+//                 console.log(err.message);
+//                 res.status(500).json({
+//                     error: {
+//                         message: err.message,
+//                     }
+//                 })
+//             });
+//         });
 
-router.put("/:id", (req, res, next) => {
-    const { id } = req.params;
-    res
-    .status(200)
-    .json({
-        id,
-        status: "success",
-        message: `${req.method} - State update by Id made`,
-    });
-});
+    //* Original code for createState before Schema was created
+    // res.status(200).json({
+    //     status: "success",
+    //     message: `${req.method} - State addition made`,
+    // });
+// });
 
-router.delete("/:id", (req, res, next) => {
-    const { id } = req.params;
-    res
-    .status(200)
-    .json({
-        id,
-        status: "success",
-        message: `${req.method} - State deletion by Id made`,
-    });
-});
+router.get("/:id", getStateById);
+
+router.put("/:id", updateState);
+
+router.delete("/:id", deleteState);
 
 module.exports = router;

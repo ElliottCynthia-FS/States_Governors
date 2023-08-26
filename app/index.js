@@ -30,7 +30,7 @@ app.get("/", (req, res, next) => {
         message: "Service is up and running",
         method: req.method,
     })
-})
+});
 
 app.use("/governors", governorRoutes);
 app.use("/states", stateRoutes);
@@ -51,8 +51,9 @@ app.use((error, req, res, next) => {
     })
 });
 
+
+//! Comment this out after Connection to MongoDB is established b/c you can't have multiple connections running at the same time
 //* Connect mongoose
-mongoose.connect(process.env.mongoDBURL)
-   
+// mongoose.connect(process.env.mongoDBURL)
 
 module.exports = app;

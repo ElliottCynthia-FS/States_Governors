@@ -7,38 +7,41 @@ const governorSchema = new mongoose.Schema({
         required: [true, 'Please add the name of the Governor'],
         unique: true,
         trim: true,
-        maxLength: [75, 'Name cannot be more than 75 characters'],
+        maxLength: [75, 'Name cannot be more than 75 characters']
+    },
+    party: {
+        type: String,
+        enum: ['Republican', 'Democrat', 'Independent'],
+        required: [true, 'Please add the party of the Governor']
     },
     timeInOffice: {
         years: {
             type: Number,
-            required: true,
+            required: true
         },
         startYear: {
             type: Number,
-            // required: false,
             minLength: [4, 'Year must be 4 digits'],
-            maxLength: [4, 'Year must be 4 digits'],
+            maxLength: [4, 'Year must be 4 digits']
         },
     },
     website: {
         type: String,
         match: [
             /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/,
-            'Please check the format of the web address',
-        ],
+            'Please check the format of the web address'
+        ]
     },
     bio: {
         type: String,
-        // required: false,
-        maxLength: [500, 'Bio cannot be more than 500 characters'],
+        maxLength: [500, 'Bio cannot be more than 500 characters']
     },
     state: {
         type: String,
         required: true,
         trim: true,
-        maxLength: [25, 'State cannot have more than 25 characters'],
-    },
+        maxLength: [25, 'State cannot have more than 25 letters']
+    }
 });
 
 module.exports = mongoose.model('Governor', governorSchema);

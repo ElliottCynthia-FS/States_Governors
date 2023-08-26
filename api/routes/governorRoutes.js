@@ -1,55 +1,62 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
+const Governor = require("../models/Governor");
+const { getGovernor, getGovernorById, createGovernor, updateGovernor, deleteGovernor } = require("../controllers/governorController");
 
-router.get("/", (req, res, next) => {
-    res
-    .status(200)
-    .json({
-        status: "success",
-        message: `${req.method} - Governor request made`,
-    });
-});
+router.get("/", getGovernor);
 
 router.post("/", (req, res, next) => {
-    res
-    .status(200)
-    .json({
-        status: "success",
-        message: `${req.method} - Governor addition made`,
+    const newGovernor = new Governor({
+        _id: new mongoose.Types.ObjectId(),
+        name: req.body.name,
+        party: req.body.party,
+        timeInOffice: {
+            years: req.body.timeInOffice.years,
+            startYear: req.body.timeInOffice.startYear,
+        },
+        website: req.body.website,
+        bio: req.body.bio,
+        state: req.body.state,
     });
+    // Write to database
+    newGovernor.save()
+        .then(result => {
+            console.log(result);
+            res.status(200).json({
+                message: "Governor created successfully",
+                governor: {
+                    name: result.name,
+                    party: result.party,
+                    timeInOffice: {
+                        years: result.timeInOffice.years,
+                        startYear: result.timeInOffice.startYear,
+                    },
+                    website: result.website,
+                    bio: result.bio,
+                    state: result.state,
+                    metadata: {
+                        method: req.method,
+                        host: req.hostname,
+                    }
+                }
+            })
+            .catch(err => {
+                console.log(err.message);
+                res.status(500).json({
+                    error: {
+                        message: err.message,
+                    }
+                })
+            });
+        })
+
 });
 
-router.get("/:id", (req, res, next) => {
-    const { id } = req.params;
-    res
-    .status(200)
-    .json({
-        id,
-        status: "success",
-        message: `${req.method} - Governor by Id request made`,
-    });
-});
+router.get("/:id", getGovernorById);
 
-router.put("/:id", (req, res, next) => {
-    const { id } = req.params;
-    res
-    .status(200)
-    .json({
-        id,
-        status: "success",
-        message: `${req.method} - Governor update by Id made`,
-    });
-});
+router.put("/:id", updateGovernor);
 
-router.delete("/:id", (req, res, next) => {
-    const { id } = req.params;
-    res
-    .status(200)
-    .json({
-        id,
-        status: "success",
-        message: `${req.method} - Governor deletion by Id made`,
-    });
-});
+router.delete("/:id", deleteGovernor);
 
 module.exports = router;
