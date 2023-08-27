@@ -23,9 +23,11 @@ router.post("/", async (req, res) => {
             counties: req.body.counties,
             governor: req.body.governor,
         });
+
     const result = await newState.save()
         // .then(result => {
         //     console.log(result);
+        
             res.status(201).json({
                 message: "State created successfully",
                 state: {

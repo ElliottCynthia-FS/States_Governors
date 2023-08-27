@@ -8,7 +8,8 @@ router.get("/", getGovernor);
 
 // router.post("/", createGovernor);
 
-router.post("/", (req, res, next) => {
+router.post("/", async (req, res) => {
+    try {
     const newGovernor = new Governor({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
@@ -22,10 +23,12 @@ router.post("/", (req, res, next) => {
         state: req.body.state,
     });
     // Write to database
-    newGovernor.save()
-        .then(result => {
-            console.log(result);
-            res.status(200).json({
+    const result = await newGovernor.save()
+
+        // .then(result => {
+        //     console.log(result);
+
+            res.status(201).json({
                 message: "Governor created successfully",
                 governor: {
                     id: result._id,
@@ -44,17 +47,15 @@ router.post("/", (req, res, next) => {
                     }
                 }
             })
-        .catch(err => {
+        } catch(err) {
             console.log(err.message);
             res.status(500).json({
                 error: {
                     message: err.message,
                 }
             })
-        });
+        }
     });
-        
-});
 
 router.get("/:id", getGovernorById);
 
