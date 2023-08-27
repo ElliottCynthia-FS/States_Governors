@@ -6,6 +6,8 @@ const { getGovernor, getGovernorById, createGovernor, updateGovernor, deleteGove
 
 router.get("/", getGovernor);
 
+// router.post("/", createGovernor);
+
 router.post("/", (req, res, next) => {
     const newGovernor = new Governor({
         _id: new mongoose.Types.ObjectId(),
@@ -26,6 +28,7 @@ router.post("/", (req, res, next) => {
             res.status(200).json({
                 message: "Governor created successfully",
                 governor: {
+                    id: result._id,
                     name: result.name,
                     party: result.party,
                     timeInOffice: {
@@ -41,16 +44,16 @@ router.post("/", (req, res, next) => {
                     }
                 }
             })
-            .catch(err => {
-                console.log(err.message);
-                res.status(500).json({
-                    error: {
-                        message: err.message,
-                    }
-                })
-            });
-        })
-
+        .catch(err => {
+            console.log(err.message);
+            res.status(500).json({
+                error: {
+                    message: err.message,
+                }
+            })
+        });
+    });
+        
 });
 
 router.get("/:id", getGovernorById);
